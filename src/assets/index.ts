@@ -11,7 +11,7 @@ import { ReactComponent as DashboardIcon } from './dashboard.svg?react';
 import { ReactComponent as EllipsisVerticalIcon } from './ellipsis-vertical.svg?react';
 import { ReactComponent as HomeIcon } from './home.svg?react';
 import { ReactComponent as InformationCircleIcon } from './information-circle.svg?react';
-import { ReactComponent as LogOutIcon } from './log-out.svg?react';
+import { ReactComponent as LogoutIcon } from './log-out.svg?react';
 import { ReactComponent as MenuIcon } from './menu.svg?react';
 import { ReactComponent as MoonIcon } from './moon.svg?react';
 import { ReactComponent as NotificationsIcon } from './notifications.svg?react';
@@ -42,7 +42,7 @@ export {
     EllipsisVerticalIcon,
     HomeIcon,
     InformationCircleIcon,
-    LogOutIcon,
+    LogoutIcon,
     MenuIcon,
     MoonIcon,
     NotificationsIcon,

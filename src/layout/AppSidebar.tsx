@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { Link, useLocation } from "react-router";
 import { useSidebar } from "../context/SidebarContext";
 import {
@@ -7,7 +7,8 @@ import {
     ModuleIcon,
     ContentIcon,
     AddAdminIcon,
-    ProfileIcon
+    ProfileIcon,
+    LogoutIcon
 } from "../assets"
 
 type NavItem = {
@@ -44,7 +45,7 @@ const navItems: NavItem[] = [
     },
     {
         name: "Profile",
-        icon: <ProfileIcon fill="currentColor" width={20} height={20} />,
+        icon: <ProfileIcon fill="currentColor" width={25} height={25} />,
         path: "/profile"
     },
 ];
@@ -89,6 +90,34 @@ const AppSidebar: React.FC = () => {
             ))}
         </ul>
     );
+
+
+    const LogoutItem = () => {
+        const [isHovered, setIsHovered] = useState(false);
+        const { isExpanded, isMobileOpen } = useSidebar();
+
+        return (
+            <ul className="flex flex-col gap-4">
+                <li>
+                    <button
+                        onMouseEnter={() => setIsHovered(true)}
+                        onMouseLeave={() => setIsHovered(false)}
+                        className="menu-item border-2 border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-200"
+                    >
+                        <div className="flex items-center gap-3 w-full h-7">
+                            <LogoutIcon fill={isHovered ? "#ffffff" : "#fb2c36"} width={30} height={30} />
+
+                            {(isExpanded || isMobileOpen) && (
+                                <span className="ml-9 font-bold transition-all duration-200">
+                                    Logout
+                                </span>
+                            )}
+                        </div>
+                    </button>
+                </li>
+            </ul>
+        );
+    };
 
 
     return (
@@ -137,11 +166,14 @@ const AppSidebar: React.FC = () => {
                     )}
                 </Link>
             </div>
-            <div className="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar">
-                <nav className="my-10">
-                    <div className="flex flex-col gap-4">
+            <div className="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar h-full">
+                <nav className="my-10 h-full">
+                    <div className="flex flex-col justify-between h-full">
                         <div>
                             {renderMenuItems(navItems)}
+                        </div>
+                        <div className="mt-auto">
+                            <LogoutItem />
                         </div>
                     </div>
                 </nav>
