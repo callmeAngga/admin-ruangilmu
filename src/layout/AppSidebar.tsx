@@ -129,7 +129,7 @@ const AppSidebar: React.FC = () => {
             onMouseEnter={() => !isExpanded}
         >
             <div
-                className={`py-8 pl-4 flex ${!isExpanded ? "lg:justify-center" : "justify-start border-b-1 border-gray-300"
+                className={`py-8 pl-4 flex ${!isExpanded ? "lg:justify-center" : "justify-start border-b-1 border-gray-300 dark:border-gray-200"
                     }`}
             >
                 <Link to="/">
@@ -137,24 +137,24 @@ const AppSidebar: React.FC = () => {
                         <>
                             <div className="flex items-center">
                                 <img
-                                    className="dark:hidden mr-4 logo-primary"
+                                    className="dark:hidden mr-4"
                                     src="/images/logo-ruangilmu.svg"
                                     alt="Logo"
                                     width={50}
                                 />
-                                <span className="font-bold text-black " >RuangIlmu</span>
-                                <span className="font-bold text-secondary">.</span>
+                                <span className="dark:hidden font-bold text-black " >RuangIlmu</span>
+                                <span className="dark:hidden font-bold text-secondary">.</span>
                             </div>
 
                             <div className="flex items-center">
                                 <img
-                                    className="hidden dark:block"
-                                    src="/images/logo-ruangilu.svg"
+                                    className="hidden mr-4 dark:block"
+                                    src="/images/logo-ruangilmu.svg"
                                     alt="Logo"
                                     width={50}
                                 />
-                                <span className="hidden dark:block font-bold text-black " >RuangIlmu</span>
-                                <span className="hidden dark:block font-bold text-secondary">.</span>
+                                <span className="hidden dark:block font-bold text-white " >RuangIlmu</span>
+                                <span className="hidden dark:block font-bold text-primary">.</span>
                             </div>
                         </>
                     ) : (

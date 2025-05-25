@@ -32,11 +32,11 @@
   }
 
   .menu-item-active {
-    @apply bg-background text-theme-text-primary;
+    @apply bg-background text-theme-text-primary dark:bg-[#1A2233] dark:text-[#FFFFFF];
   }
 
   .menu-item-inactive {
-    @apply text-theme-text-secondary hover:bg-gray-100 hover:text-theme-text-primary;
+    @apply text-theme-text-secondary hover:bg-gray-100 hover:text-theme-text-primary dark:hover:bg-[#1A2233] dark:hover:text-[#FFFFFF];
   }
 
   .menu-item-inactive:hover .icon-container-inactive {
