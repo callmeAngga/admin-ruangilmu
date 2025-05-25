@@ -1,8 +1,9 @@
 export default function AddAdminPage() {
-  return (
-    <div>
-      <h1>Add Admin Page</h1>
-      <p>This is the module page where you can find various resources and information.</p>
-    </div>
-  );
+    return (
+        <main className="flex flex-col justify-center items-center h-[80vh]">
+            <h1>Cooming Soon!</h1>
+            <br />
+            <h3>Halaman Tambah Admin Sedang Dalam Tahap Pengembangan</h3>
+        </main>
+    );
 }
