@@ -120,7 +120,7 @@ const AppHeader: React.FC = () => {
                     <div className="flex justify-center gap-4 text-black dark:text-white">
                         <span>Dashboard</span>
                         <span>/</span>
-                        <span className="text-theme-text-secondary dark:text-theme-text-secondary">{activePathName}</span>
+                        <span className="text-theme-text-secondary dark:text-theme-text-secondary">{activePathName === 'Dashboard' ? 'Statistik' : activePathName}</span>
                     </div>
                 ) : null}
 

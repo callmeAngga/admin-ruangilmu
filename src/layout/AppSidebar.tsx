@@ -81,7 +81,7 @@ const AppSidebar: React.FC = () => {
             onMouseEnter={() => !isExpanded}
         >
             <div
-                className={`h-20 py-4 flex items-center ${!isExpanded ? "lg:justify-center" : "justify-start border-b-1 border-gray-300 dark:border-gray-200"
+                className={`h-20 pt-4 flex items-center ${!isExpanded ? "lg:justify-center" : "justify-start"
                     }`}
             >
                 <Link to="/">
@@ -92,7 +92,7 @@ const AppSidebar: React.FC = () => {
                                     className="dark:hidden pl-4 mr-4"
                                     src="/images/logo-ruangilmu.svg"
                                     alt="Logo"
-                                    width={50}
+                                    width={70}
                                 />
                                 <span className="dark:hidden font-bold text-black " >RuangIlmu</span>
                                 <span className="dark:hidden font-bold text-secondary">.</span>
@@ -103,7 +103,7 @@ const AppSidebar: React.FC = () => {
                                     className="hidden pl-4 mr-4 dark:block"
                                     src="/images/logo-ruangilmu.svg"
                                     alt="Logo"
-                                    width={50}
+                                    width={70}
                                 />
                                 <span className="hidden dark:block font-bold text-white " >RuangIlmu</span>
                                 <span className="hidden dark:block font-bold text-primary">.</span>

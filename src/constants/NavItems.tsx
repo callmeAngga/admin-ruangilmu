@@ -6,7 +6,7 @@ import {
     ContentIcon,
     AddAdminIcon,
     ProfileIcon,
-} from "../assets"; // Ensure these imports are correct and point to actual SVG/React components
+} from "../assets";
 
 export type NavItem = {
     name: string;
@@ -16,7 +16,7 @@ export type NavItem = {
 
 export const navItems: NavItem[] = [
     {
-        name: "Default",
+        name: "Dashboard",
         icon: <DashboardIcon fill="currentColor" width={20} height={20} />,
         path: "/"
     },
@@ -27,7 +27,7 @@ export const navItems: NavItem[] = [
     },
     {
         name: "Modules",
-        icon: <ModuleIcon fill="currentColor" width={20} height={20} />,
+        icon: <ModuleIcon fill="currentColor" width={22} height={22} />,
         path: "/modules"
     },
     {
@@ -37,12 +37,12 @@ export const navItems: NavItem[] = [
     },
     {
         name: "Admin",
-        icon: <AddAdminIcon fill="currentColor" width={20} height={20} />,
+        icon: <AddAdminIcon fill="currentColor" width={22} height={22} />,
         path: "/admin"
     },
     {
         name: "Profile",
-        icon: <ProfileIcon fill="currentColor" width={25} height={25} />,
+        icon: <ProfileIcon fill="currentColor" width={27} height={27} />,
         path: "/profile"
     },
 ];
