@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-:root {
+/* :root {
   font-family: Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -13,7 +13,9 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
+} */
+
+@custom-variant dark (&:is(.dark *));
 
 @theme {
   --color-primary: #11AECE;
@@ -26,13 +28,14 @@
   --text-theme-sm--line-height: 20px;
 }
 
+
 @layer utilities {
   .menu-item {
-    @apply relative flex items-center w-full px-4 py-4 font-medium rounded-lg text-theme-sm transition-all duration-200;
+    @apply relative flex items-center w-full py-4 font-medium rounded-lg text-theme-sm transition-all duration-200;
   }
 
   .menu-item-active {
-    @apply bg-background text-theme-text-primary dark:bg-[#1A2233] dark:text-[#FFFFFF];
+    @apply text-theme-text-primary dark:text-[#FFFFFF];
   }
 
   .menu-item-inactive {
@@ -42,7 +45,7 @@
   .menu-item-inactive:hover .icon-container-inactive {
     @apply bg-primary text-white;
   }
-
+  
   .menu-item-text {
     @apply whitespace-nowrap overflow-hidden;
   }
@@ -64,6 +67,7 @@
   .icon-container-inactive {
     @apply text-primary;
   }
+
 }
 
 .logo-primary {
