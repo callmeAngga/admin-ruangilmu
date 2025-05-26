@@ -12,17 +12,17 @@ import TopUsersTable from "../components/table/TopUserTable";
 export default function StatisticPage() {
     return (
         <main className="p-4 min-h-screen bg-[#F9FAFB] dark:bg-gray-900 space-y-4">
-            <div className="flex flex-col gap-4 h-[50vh]">
+            <div className="flex flex-col gap-4">
                 <div className="flex flex-col lg:flex-row gap-4 flex-1">
                     <div className="flex-1 lg:w-3/4 flex flex-col gap-4">
-                        <div className="flex gap-4 h-2/7">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 h-1.5/6">
                             <UserCountKPI />
                             <CourseCountKPI />
                             <CompletionRatioKPI />
                             <ReviewStatsKPI />
                         </div>
 
-                        <div className="flex gap-4 flex-1 h-5/7">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 h-4.5/6">
                             <UserGrowthChart />
                             <CertificatesChart />
                         </div>
@@ -35,7 +35,7 @@ export default function StatisticPage() {
                 </div>
             </div>
 
-            <div className="flex flex-col md:flex-row gap-4 h-[50vh] min-h-[200px]">
+            <div className="grid grid-cols-2 md:flex-row gap-4  min-h-[200px]">
                 <CoursesTable /> 
                 <TopUsersTable />
             </div>

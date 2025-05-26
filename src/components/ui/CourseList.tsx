@@ -13,6 +13,7 @@ interface CourseData {
 
 interface CourseListProps {
     onCourseSelect: (course: CourseData) => void;
+    totalColumn?: number;
 }
 
 const sampleCourses: CourseData[] = [
@@ -81,7 +82,7 @@ const sampleCourses: CourseData[] = [
 const CourseList = ({ onCourseSelect }: CourseListProps) => {
     return (
         <div className="flex-1 bg-white border border-gray-300 dark:border-gray-800 dark:bg-gray-800 rounded-lg p-4">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-1 lg:grid-cols-2">
+            <div className={`grid grid-cols-1 gap-4 md:grid-cols-1 lg:grid-cols-2`}>
                 {sampleCourses.map((course) => (
                     <CourseCard
                         key={course.id}

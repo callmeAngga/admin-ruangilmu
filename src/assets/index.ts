@@ -27,6 +27,11 @@ import { ReactComponent as SunnyIcon } from './sunny.svg?react';
 import { ReactComponent as ModuleIcon } from './layers.svg?react';
 import { ReactComponent as ContentIcon } from './reader.svg?react';
 import { ReactComponent as UserIcon } from './person-circle.svg?react';
+import { ReactComponent as DeskripsiIcon } from './albums.svg?react';
+import { ReactComponent as ModuleNameIcon } from './key.svg?react';
+import { ReactComponent as ExclamationIcon } from './alert-circle.svg?react';
+import { ReactComponent as DocumenTextIcon } from './document-text.svg?react';
+
 
 
 export {
@@ -58,5 +63,9 @@ export {
     SunnyIcon,
     ModuleIcon,
     ContentIcon,
-    UserIcon
+    UserIcon,
+    ModuleNameIcon,
+    DeskripsiIcon,
+    ExclamationIcon,
+    DocumenTextIcon
 };
