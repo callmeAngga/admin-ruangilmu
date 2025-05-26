@@ -1,82 +1,96 @@
+import { useState } from 'react';
+import CourseMenu from "../components/ui/CourseMenu";
+import CourseList from "../components/ui/CourseList";
+import PaginationCard from "../components/card/PaginationCard";
+import HeaderFormCard from "../components/card/HeaderFormCard";
+import CourseForm from "../components/form/CourseForm";
+
+interface CourseData {
+    id?: string;
+    name: string;
+    coverImage?: string;
+    profileImage?: string;
+    description: string;
+    price: string;
+    status: 'published' | 'pending';
+    slug: string;
+}
+
 export default function CoursePage() {
+    const [selectedCourse, setSelectedCourse] = useState<CourseData | null>(null);
+    const [formMode, setFormMode] = useState<'add' | 'edit' | 'view'>('view');
+    const [isFormActive, setIsFormActive] = useState(true);
+
+    // Handler ketika CourseCard diklik
+    const handleCourseSelect = (courseData: CourseData) => {
+        setSelectedCourse(courseData);
+        setFormMode('edit');
+        setIsFormActive(true);
+    };
+
+    // Handler ketika tombol "Tambah" di HeaderFormCard diklik
+    const handleAddNewCourse = () => {
+        setSelectedCourse(null);
+        setFormMode('add');
+        setIsFormActive(true);
+    };
+
+    // Handler ketika form disimpan
+    const handleFormSave = (data: CourseData) => {
+        if (formMode === 'add') {
+            console.log('Adding new course:', data);
+            // TODO: Implement add course logic
+        } else {
+            console.log('Updating course:', data);
+            // TODO: Implement update course logic
+        }
+
+        // Reset form setelah save
+        setSelectedCourse(null);
+        setFormMode('view');
+        setIsFormActive(false);
+    };
+
+    // Handler ketika form dibatalkan (hanya untuk mode add)
+    const handleFormCancel = () => {
+        setSelectedCourse(null);
+        setFormMode('view');
+        setIsFormActive(false);
+    };
+
     return (
-        <main className="p-4 min-h-screen bg-gray-100">
-            <div className="flex flex-col lg:flex-row gap-6 h-screen">
+        <main className="p-4 min-h-screen bg-[#F9FAFB] dark:bg-gray-900">
+            <div className="flex flex-col lg:flex-row gap-6">
                 <div className="flex-1 flex flex-col gap-4">
-                    <div className="bg-white rounded-lg p-4 shadow-sm">
-                        <h1 className="text-2xl font-bold mb-4 text-gray-800">Daftar Course</h1>
+                    <CourseMenu />
 
-                        <div className="bg-gray-200 rounded-lg p-3 mb-4 border-2 border-dashed border-gray-400">
-                            <span className="text-gray-600">Search Component Box</span>
-                        </div>
+                    <CourseList onCourseSelect={handleCourseSelect} />
 
-                        <div className="flex gap-4">
-                            <div className="bg-blue-200 rounded-lg p-3 flex-1 border-2 border-dashed border-blue-400">
-                                <span className="text-blue-700">Status Dropdown</span>
-                            </div>
-                            <div className="bg-green-200 rounded-lg p-3 flex-1 border-2 border-dashed border-green-400">
-                                <span className="text-green-700">Area Dropdown</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="flex-1 bg-white rounded-lg p-4 shadow-sm">
-                        <div className="grid grid-cols-2 gap-4 h-full">
-                            <div className="bg-purple-300 rounded-lg p-4 flex items-center justify-center text-purple-800 font-semibold border-2 border-dashed border-purple-500">
-                                Course 1
-                            </div>
-                            <div className="bg-indigo-300 rounded-lg p-4 flex items-center justify-center text-indigo-800 font-semibold border-2 border-dashed border-indigo-500">
-                                Course 2
-                            </div>
-                            <div className="bg-pink-300 rounded-lg p-4 flex items-center justify-center text-pink-800 font-semibold border-2 border-dashed border-pink-500">
-                                Course 3
-                            </div>
-                            <div className="bg-yellow-300 rounded-lg p-4 flex items-center justify-center text-yellow-800 font-semibold border-2 border-dashed border-yellow-500">
-                                Course 4
-                            </div>
-                            <div className="bg-red-300 rounded-lg p-4 flex items-center justify-center text-red-800 font-semibold border-2 border-dashed border-red-500">
-                                Course 5
-                            </div>
-                            <div className="bg-teal-300 rounded-lg p-4 flex items-center justify-center text-teal-800 font-semibold border-2 border-dashed border-teal-500">
-                                Course 6
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="bg-white rounded-lg p-4 shadow-sm">
-                        <div className="flex justify-between items-center">
-                            <div className="bg-gray-300 rounded-lg px-4 py-2 border-2 border-dashed border-gray-500">
-                                <span className="text-gray-700">← Previous</span>
-                            </div>
-                            <div className="bg-blue-100 rounded-lg px-4 py-2">
-                                <span className="text-blue-700">Page 1 of 5</span>
-                            </div>
-                            <div className="bg-gray-300 rounded-lg px-4 py-2 border-2 border-dashed border-gray-500">
-                                <span className="text-gray-700">Next →</span>
-                            </div>
-                        </div>
-                    </div>
+                    <PaginationCard />
                 </div>
 
                 <div className="flex-1 flex flex-col gap-4">
-                    <div className="bg-white rounded-lg p-4 shadow-sm">
-                        <div className="flex justify-between items-center">
-                            <div>
-                                <h2 className="text-xl font-bold text-gray-800">Tambahkan Course Baru</h2>
-                                <p className="text-gray-600 text-sm mt-1">Buat course baru untuk platform pembelajaran</p>
-                            </div>
-                            <div className="bg-cyan-400 hover:bg-cyan-500 text-white px-4 py-2 rounded-lg font-semibold cursor-pointer transition-colors">
-                                + Course Baru
-                            </div>
-                        </div>
-                    </div>
+                    <HeaderFormCard
+                        judul={formMode === 'add' ? "Tambahkan Course Baru" : formMode === 'edit' ? "Edit Course" : "Course Form"}
+                        deskripsi={
+                            formMode === 'add'
+                                ? "Buat course baru untuk platform pembelajaran"
+                                : formMode === 'edit'
+                                    ? `Edit course: ${selectedCourse?.name || ''}`
+                                    : "Pilih course dari daftar atau tambah course baru"
+                        }
+                        onAddClick={handleAddNewCourse}
+                    />
 
-                    <div className="flex-1 bg-white rounded-lg p-4 shadow-sm">
-                        <div className="bg-orange-200 rounded-lg p-6 h-full border-2 border-dashed border-orange-400 flex items-center justify-center">
-                            <div className="text-center">
-                                <span className="text-orange-800 font-semibold text-lg">Form Component Area</span>
-                                <p className="text-orange-700 text-sm mt-2">Tempat untuk form input course baru</p>
-                            </div>
+                    <div className="flex-1 bg-[#F9FAFB] border border-gray-300 dark:bg-gray-800 dark:border-gray-700 rounded-lg">
+                        <div className="rounded-lg p-6 h-full flex items-center justify-center">
+                            <CourseForm
+                                courseData={selectedCourse}
+                                isActive={isFormActive}
+                                mode={formMode}
+                                onSave={handleFormSave}
+                                onCancel={handleFormCancel}
+                            />
                         </div>
                     </div>
                 </div>

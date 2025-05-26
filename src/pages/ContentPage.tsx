@@ -1,6 +1,6 @@
 export default function ContentPage() {
     return (
-        <main className="p-4 min-h-screen bg-gray-100">
+        <main className="p-4 min-h-screen bg-[#F9FAFB] dark:bg-gray-900">
             <div className="flex flex-col lg:flex-row gap-6 h-screen">
                 <div className="w-full lg:w-1/4 flex flex-col gap-4">
                     <div className="bg-white rounded-lg p-4 shadow-sm">

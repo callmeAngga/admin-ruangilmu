@@ -4,7 +4,7 @@ import { useSidebar } from "../context/SidebarContext";
 import { ThemeToggleButton } from "../components/ThemeToggleButton";
 import NotificationDropdown from "../components/header/NotificationDropdown";
 import ProfileDropdown from "../components/header/ProfileDropdown";
-import { navItems } from "../constants/navItems";
+import { navItems } from "../constants/NavItems";
 
 const AppHeader: React.FC = () => {
     const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
