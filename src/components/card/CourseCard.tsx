@@ -78,7 +78,7 @@ const CourseCard = ({ course, onSelect }: CourseCardProps) => {
                     </span>
                     <div className="flex space-x-2">
                         <button
-                            className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
+                            className="p-2 text-gray-500 hover:text-primary hover:bg-blue-50 rounded-full transition-colors"
                             onClick={(e) => {
                                 e.stopPropagation(); // Prevent card click
                                 onSelect();

@@ -25,7 +25,6 @@ const CompletionRatioKPI: React.FC = () => {
             title="Rasio Penyelesaian"
             value={data?.completionRatio?.toFixed(2) || '0.00'}
             icon={UserIcon}
-            color="bg-gradient-to-br from-yellow-500 to-yellow-600"
             subtext="Completion rate"
         />
     );

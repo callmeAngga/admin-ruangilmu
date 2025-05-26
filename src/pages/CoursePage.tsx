@@ -64,7 +64,7 @@ export default function CoursePage() {
                 <div className="flex-1 flex flex-col gap-4">
                     <CourseMenu />
 
-                    <CourseList onCourseSelect={handleCourseSelect} />
+                    <CourseList onCourseSelect={handleCourseSelect} totalColumn={2} />
 
                     <PaginationCard />
                 </div>

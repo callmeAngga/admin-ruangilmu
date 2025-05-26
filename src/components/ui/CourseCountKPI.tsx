@@ -24,7 +24,6 @@ const CourseCountKPI: React.FC = () => {
             title="Total Course"
             value={data?.totalCourses || 0}
             icon={UserIcon}
-            color="bg-gradient-to-br from-green-500 to-green-600"
             subtext="Available courses"
         />
     );

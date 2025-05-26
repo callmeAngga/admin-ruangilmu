@@ -6,7 +6,7 @@ const status = [
 ];
 
 const kelas = [
-    { value: "4" , label: "Kelas 4" },
+    { value: "4", label: "Kelas 4" },
     { value: "5", label: "Kelas 5" },
     { value: "6", label: "Kelas 6" },
 ];

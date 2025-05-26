@@ -24,7 +24,6 @@ const UserCountKPI: React.FC = () => {
             title="Total Pengguna"
             value={data?.totalUsers || 0}
             icon={UserIcon}
-            color="bg-gradient-to-br from-blue-500 to-blue-600"
             subtext="Registered users"
         />
     );
