@@ -26,6 +26,7 @@ import { ReactComponent as StatsChartIcon } from './stats-chart.svg?react';
 import { ReactComponent as SunnyIcon } from './sunny.svg?react';
 import { ReactComponent as ModuleIcon } from './layers.svg?react';
 import { ReactComponent as ContentIcon } from './reader.svg?react';
+import { ReactComponent as UserIcon } from './person-circle.svg?react';
 
 
 export {
@@ -56,5 +57,6 @@ export {
     StatsChartIcon,
     SunnyIcon,
     ModuleIcon,
-    ContentIcon
+    ContentIcon,
+    UserIcon
 };

@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { Link, useLocation } from "react-router";
 import { useSidebar } from "../context/SidebarContext";
 import { LogoutIcon } from "../assets"
-import { type NavItem, navItems } from "../constants/navItems";
+import { type NavItem, navItems } from "../constants/NavItems";
 
 const AppSidebar: React.FC = () => {
     const { isExpanded, isMobileOpen } = useSidebar();
