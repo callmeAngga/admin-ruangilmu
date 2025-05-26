@@ -82,7 +82,7 @@ export default function CoursePage() {
                         onAddClick={handleAddNewCourse}
                     />
 
-                    <div className="flex-1 bg-[#F9FAFB] border border-gray-300 dark:bg-gray-800 dark:border-gray-700 rounded-lg">
+                    <div className="flex-1 bg-white border border-gray-300 dark:bg-gray-800 dark:border-gray-700 rounded-lg">
                         <div className="rounded-lg p-6 h-full flex items-center justify-center">
                             <CourseForm
                                 courseData={selectedCourse}
