@@ -27,8 +27,28 @@ interface UserGrowthDataPoint {
 const UserGrowthChart: React.FC = () => {
     const { data, loading, error } = useApiData<ChartData>('/dashboard/user-growth');
 
-    if (loading) return <div className="bg-white rounded-xl p-6 animate-pulse h-full"></div>;
-    if (error) return <div className="bg-red-100 rounded-xl p-6 text-red-600">Error loading chart data</div>;
+    if (loading) return (
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl h-[400px]">
+            <div className="animate-pulse flex flex-col h-full p-6">
+                <div className="h-6 w-48 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
+                <div className="flex-1 bg-gray-100 dark:bg-gray-700 rounded"></div>
+            </div>
+        </div>
+    );
+
+    if (error) return (
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-6 h-[400px] flex flex-col items-center justify-center text-red-600 dark:text-red-400">
+            <div className="text-center">
+                <p className="font-medium">Error loading chart data</p>
+                <button
+                    onClick={() => window.location.reload()}
+                    className="mt-2 px-3 py-1 text-sm bg-red-100 dark:bg-red-900/30 rounded-md hover:bg-red-200 dark:hover:bg-red-900/40 transition-colors"
+                >
+                    Coba Lagi
+                </button>
+            </div>
+        </div>
+    );
 
     const chartData: UserGrowthDataPoint[] = data?.labels?.map((label, index) => ({
         month: label,
@@ -36,8 +56,8 @@ const UserGrowthChart: React.FC = () => {
     })) || [];
 
     return (
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl h-full shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between px-6 pt-5 pb-2">
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl h-full flex flex-col">
+            <div className="flex items-center justify-between px-6 pt-5 pb-2 flex-shrink-0">
                 <h3 className="font-semibold text-lg text-gray-800 dark:text-gray-200">
                     Pertumbuhan Pengguna per Bulan
                 </h3>
@@ -47,15 +67,15 @@ const UserGrowthChart: React.FC = () => {
                 </div>
             </div>
 
-            <div className="px-2 pb-2 h-[calc(100%-72px)]">
+            <div className="flex-1 px-4 pb-4 min-h-0">
                 <ResponsiveContainer width="100%" height="100%">
                     <LineChart
                         data={chartData}
-                        margin={{ top: 10, right: 15, left: 0, bottom: 5 }}
+                        margin={{ top: 10, right: 15, left: 10, bottom: 5 }}
                     >
                         <CartesianGrid
                             strokeDasharray="3 3"
-                            stroke="#6a7282 "
+                            stroke="#e5e7eb"
                             vertical={false}
                             strokeOpacity={0.5}
                         />
@@ -78,7 +98,7 @@ const UserGrowthChart: React.FC = () => {
                                 fontSize: 12,
                                 fontFamily: 'Inter, sans-serif'
                             }}
-                            width={35}
+                            width={40}
                         />
                         <Tooltip
                             contentStyle={{

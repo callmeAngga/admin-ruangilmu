@@ -42,7 +42,7 @@ const TopUsersTable: React.FC = () => {
     );
 
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
+        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700  h-full flex flex-col">
             <div className="px-6 pt-5 pb-3 border-b border-gray-200 dark:border-gray-700">
                 <h3 className="font-semibold text-lg text-gray-800 dark:text-white">Top Performer User</h3>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Pengguna dengan aktivitas belajar tertinggi</p>

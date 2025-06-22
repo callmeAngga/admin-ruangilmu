@@ -37,7 +37,7 @@ const CoursesTable: React.FC = () => {
     );
 
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg dark:shadow-none dark:border dark:border-gray-700 h-full flex flex-col">
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 h-full flex flex-col">
             <div className="flex justify-between items-center mb-6">
                 <h3 className="font-semibold text-lg text-gray-800 dark:text-gray-200">Daftar Kursus</h3>
                 <div className="text-xs text-gray-500 dark:text-gray-400">

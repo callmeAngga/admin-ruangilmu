@@ -7,7 +7,6 @@ interface UseApiDataResult<T> {
 }
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
-console.log('API Base URL:', API_URL);
 const token = import.meta.env.VITE_TOKEN;
 
 const useApiData = <T>(endpoint: string): UseApiDataResult<T> => {

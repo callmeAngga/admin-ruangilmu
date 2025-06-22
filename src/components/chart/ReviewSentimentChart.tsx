@@ -4,7 +4,6 @@ import {
     PieChart,
     Pie,
     Cell,
-    Legend,
     Label
 } from 'recharts';
 import useApiData from "../../hooks/useApiData";
@@ -52,10 +51,10 @@ const ReviewSentimentChart: React.FC = () => {
     const TOTAL = chartData.reduce((sum, entry) => sum + entry.value, 0);
 
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg dark:shadow-none dark:border dark:border-gray-700 h-full flex flex-col">
-            <h3 className="font-semibold text-lg text-gray-800 dark:text-gray-200 mb-6">Distribusi Sentimen Review</h3>
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 dark:shadow-none border border-gray-200 dark:border-gray-700 h-full flex flex-col">
+            <h3 className="font-semibold text-lg text-gray-800 dark:text-gray-200">Distribusi Sentimen Review</h3>
 
-            <div className="flex-1 min-h-[250px]">
+            <div className="flex-1 min-h-[250px] p-0">
                 <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                         <Pie
@@ -64,7 +63,7 @@ const ReviewSentimentChart: React.FC = () => {
                             cy="50%"
                             innerRadius={60}
                             outerRadius={80}
-                            paddingAngle={2}
+                            paddingAngle={0}
                             dataKey="value"
                             labelLine={false}
                         >
@@ -93,20 +92,6 @@ const ReviewSentimentChart: React.FC = () => {
                             itemStyle={{ color: '#111827' }}
                             labelStyle={{ fontWeight: 600, color: '#111827' }}
                         />
-                        <Legend
-                            verticalAlign="bottom"
-                            height={36}
-                            iconType="circle"
-                            iconSize={10}
-                            formatter={(value) => (
-                                <span className="text-gray-600 dark:text-gray-300 text-xs">
-                                    {value}
-                                </span>
-                            )}
-                            wrapperStyle={{
-                                paddingTop: '20px'
-                            }}
-                        />
                         <Label
                             value="Sentimen Review"
                             position="center"
@@ -116,7 +101,7 @@ const ReviewSentimentChart: React.FC = () => {
                 </ResponsiveContainer>
             </div>
 
-            <div className="flex flex-wrap justify-center gap-4 mt-4">
+            <div className="flex flex-wrap justify-center gap-4">
                 {chartData.map((entry, index) => (
                     <div key={entry.name} className="flex items-center">
                         <div

@@ -3,10 +3,10 @@ import {
     YAxis,
     CartesianGrid,
     Tooltip,
-    ResponsiveContainer,
     BarChart,
     Bar,
-    Cell
+    Cell,
+    ResponsiveContainer
 } from 'recharts';
 import { DocumenTextIcon, ExclamationIcon } from "../../assets";
 import useApiData from "../../hooks/useApiData";
@@ -30,8 +30,8 @@ const CertificatesChart: React.FC = () => {
     const { data, loading, error } = useApiData<ChartData>('/dashboard/certificates-per-course');
 
     if (loading) return (
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 h-full">
-            <div className="animate-pulse flex flex-col h-full">
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl h-[400px]">
+            <div className="animate-pulse flex flex-col h-full p-6">
                 <div className="h-6 w-40 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
                 <div className="flex-1 bg-gray-100 dark:bg-gray-700 rounded"></div>
             </div>
@@ -39,9 +39,9 @@ const CertificatesChart: React.FC = () => {
     );
 
     if (error) return (
-        <div className="bg-red-50 dark:bg-red-900/20 rounded-xl p-6 h-full flex flex-col items-center justify-center text-red-600 dark:text-red-400">
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-6 h-[400px] flex flex-col items-center justify-center text-red-600 dark:text-red-400">
             <ExclamationIcon className="w-8 h-8 mb-2" />
-            <p>Gagal memuat data sertifikat</p>
+            <p className="font-medium">Gagal memuat data sertifikat</p>
             <button
                 onClick={() => window.location.reload()}
                 className="mt-2 px-3 py-1 text-sm bg-red-100 dark:bg-red-900/30 rounded-md hover:bg-red-200 dark:hover:bg-red-900/40 transition-colors"
@@ -56,9 +56,21 @@ const CertificatesChart: React.FC = () => {
         certificates: data.datasets[0]?.data[index] || 0
     })).filter(item => item.certificates > 0) || [];
 
+    // Generate gradient definitions for each bar
+    const gradients = chartData.map((_, index) => (
+        <linearGradient
+            key={`gradient-${index}`}
+            id={`gradient-${index}`}
+            x1="0" y1="0" x2="1" y2="0"
+        >
+            <stop offset="0%" stopColor="#6366f1" />
+            <stop offset="100%" stopColor="#8b5cf6" />
+        </linearGradient>
+    ));
+
     return (
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl h-full shadow-sm hover:shadow-md transition-all">
-            <div className="px-6 pt-5 pb-2">
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl h-full flex flex-col">
+            <div className="px-6 pt-5 pb-2 flex-shrink-0">
                 <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center">
                         <DocumenTextIcon className="w-5 h-5 text-indigo-500 mr-2" />
@@ -75,13 +87,16 @@ const CertificatesChart: React.FC = () => {
                 </p>
             </div>
 
-            <div className="px-2 pb-2 h-[calc(100%-90px)]">
+            <div className="flex-1 px-4 pb-4 min-h-0">
                 <ResponsiveContainer width="100%" height="100%">
                     <BarChart
                         data={chartData}
                         layout="vertical"
-                        margin={{ top: 10, right: 20, left: 0, bottom: 5 }}
+                        margin={{ top: 10, right: 20, left: 10, bottom: 5 }}
                     >
+                        <defs>
+                            {gradients}
+                        </defs>
                         <CartesianGrid
                             strokeDasharray="3 3"
                             stroke="#e5e7eb"
@@ -136,15 +151,6 @@ const CertificatesChart: React.FC = () => {
                                 />
                             ))}
                         </Bar>
-                        <defs>
-                            <linearGradient
-                                id="gradient-0"
-                                x1="0" y1="0" x2="1" y2="0"
-                            >
-                                <stop offset="0%" stopColor="#6366f1" />
-                                <stop offset="100%" stopColor="#8b5cf6" />
-                            </linearGradient>
-                        </defs>
                     </BarChart>
                 </ResponsiveContainer>
             </div>

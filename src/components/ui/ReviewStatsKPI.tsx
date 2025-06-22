@@ -25,7 +25,7 @@ const ReviewStatsKPI: React.FC = () => {
     };
 
     return (
-        <div className="bg-white border border-gray-300 dark:border-gray-800 dark:bg-gray-800 rounded-lg  p-6 text-gray-700 dark:text-gray-300 hover:shadow-sm transition-all duration-300 transform hover:scale-101">
+        <div className="bg-white border border-gray-200 dark:border-gray-700 dark:bg-gray-800 rounded-lg p-6 text-gray-700 dark:text-gray-300">
             <div className="flex items-center justify-between mb-4">
                 <h3 className="font-bold text-[15px]uppercase tracking-wide opacity-90">Statistik Review</h3>
                 <UserIcon className="w-6 h-6 opacity-80" />
