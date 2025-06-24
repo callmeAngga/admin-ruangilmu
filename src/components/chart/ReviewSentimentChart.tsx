@@ -67,7 +67,7 @@ const ReviewSentimentChart: React.FC = () => {
                             dataKey="value"
                             labelLine={false}
                         >
-                            {chartData.map((entry, index) => (
+                            {chartData.map((_, index) => (
                                 <Cell
                                     key={`cell-${index}`}
                                     fill={COLORS[index % COLORS.length]}

@@ -144,7 +144,7 @@ const CertificatesChart: React.FC = () => {
                             radius={[0, 4, 4, 0]}
                             animationDuration={1500}
                         >
-                            {chartData.map((entry, index) => (
+                            {chartData.map((_, index) => (
                                 <Cell
                                     key={`cell-${index}`}
                                     fill={`url(#gradient-${index})`}
