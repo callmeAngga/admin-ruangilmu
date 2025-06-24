@@ -28,13 +28,15 @@ export default function LoginForm() {
     const [isSuccess, setIsSuccess] = useState(false);
     const [userData, setUserData] = useState<LoginResponse['data']['user'] | null>(null);
 
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         setError(null);
 
         try {
-            const response = await fetch('http://localhost:8000/auth/login', {
+            const response = await fetch(`${API_BASE_URL}/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
