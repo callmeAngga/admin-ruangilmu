@@ -29,6 +29,7 @@ export default function LoginForm() {
     const [userData, setUserData] = useState<LoginResponse['data']['user'] | null>(null);
 
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+    const FRONTEND_URL = import.meta.env.VITE_FRONTEND_URL;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -36,7 +37,7 @@ export default function LoginForm() {
         setError(null);
 
         try {
-            const response = await fetch(`${API_BASE_URL}/auth/login`, {
+            const response = await fetch(`${API_BASE_URL}auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -61,7 +62,7 @@ export default function LoginForm() {
 
             // Redirect after successful login
             setTimeout(() => {
-                window.location.href = 'http://localhost:5173/dashboard';
+                window.location.href = `${FRONTEND_URL}/dashboard`;
             }, 2000);
 
         } catch (err: unknown) {
