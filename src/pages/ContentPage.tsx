@@ -129,7 +129,7 @@ export default function ContentPage() {
     return (
         <main className="p-4 min-h-screen bg-[#F9FAFB] dark:bg-gray-900">
             <div className="flex flex-col lg:flex-row gap-6">
-                <div className="w-full lg:w-2/5 flex flex-col gap-4">
+                <div className="w-full lg:w-1/4 flex flex-col gap-4">
                     <CourseMenu // TODO: Jika menu ini spesifik untuk "Course", mungkin perlu ganti namanya
                         onSearch={handleSearch}
                         onStatusFilter={handleStatusFilter}
@@ -151,7 +151,7 @@ export default function ContentPage() {
                     />
                 </div>
 
-                <div className="flex-1 lg:w-3/5 flex flex-col gap-4">
+                <div className="flex-1 lg:w-3/4 flex flex-col gap-4">
                     <HeaderFormCard
                         judul={formMode === 'add' ? "Tambahkan Konten Baru" : formMode === 'edit' ? "Edit Konten" : "Konten Form"} // Judul disesuaikan
                         deskripsi={
