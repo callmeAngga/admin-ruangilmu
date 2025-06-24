@@ -1,23 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import Select from './Select';
-interface CourseData {
-    id?: string;
-    name: string;
-    coverImage?: string;
-    profileImage?: string;
-    description: string;
-    price: string;
-    status: 'published' | 'pending';
-    slug: string;
-}
+import type { CourseData, CourseFormData } from "../../types/course";
 
 interface CourseFormProps {
     courseData?: CourseData | null;
     isActive: boolean;
     mode: 'add' | 'edit' | 'view';
-    onSave: (data: CourseData) => void;
+    onSave: (data: CourseFormData) => void;
     onCancel?: () => void;
 }
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const CourseForm: React.FC<CourseFormProps> = ({
     courseData = null,
@@ -26,56 +19,79 @@ const CourseForm: React.FC<CourseFormProps> = ({
     onSave,
     onCancel
 }) => {
-    const [formData, setFormData] = useState<CourseData>({
-        name: '',
-        description: '',
-        price: '',
-        status: 'pending',
-        slug: ''
-    });
+    const initialFormData: CourseFormData = {
+        course_name: '',
+        course_description: '',
+        course_price: '',
+        status: '',
+        course_slug: '',
+        course_image_profile: null,
+        course_image_cover: null,
+    };
 
-    const [profileImage, setProfileImage] = useState<File | null>(null);
-    const [profilePreview, setProfilePreview] = useState<string>('');
-    const [coverImage, setCoverImage] = useState<File | null>(null);
-    const [coverPreview, setCoverPreview] = useState<string>('');
+    const [formData, setFormData] = useState<CourseFormData>(initialFormData);
+
+    const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
+    const [coverImageFile, setCoverImageFile] = useState<File | null>(null);
+
+    const [profilePreviewUrl, setProfilePreviewUrl] = useState<string>('');
+    const [coverPreviewUrl, setCoverPreviewUrl] = useState<string>('');
+
+    const [existingProfileImageUrl, setExistingProfileImageUrl] = useState<string>('');
+    const [existingCoverImageUrl, setExistingCoverImageUrl] = useState<string>('');
+
     const [isEditing, setIsEditing] = useState<boolean>(false);
-
-    console.log('Profile Image:', profileImage);
-    console.log('Cover Image:', coverImage);
 
     useEffect(() => {
         if (courseData && mode !== 'add') {
             setFormData({
-                id: courseData.id,
-                name: courseData.name || '',
-                description: courseData.description || '',
-                price: courseData.price || '',
+                course_id: courseData.course_id,
+                course_name: courseData.course_name || '',
+                course_description: courseData.course_description || '',
+                course_price: courseData.course_price || '',
                 status: courseData.status,
-                slug: courseData.slug || ''
+                course_slug: courseData.course_slug || '',
+                course_image_profile: null, 
+                course_image_cover: null, 
             });
 
-            if (courseData.coverImage) {
-                setCoverPreview(courseData.coverImage);
+            if (courseData.course_image_cover) {
+                setExistingCoverImageUrl(`${API_BASE_URL}/uploads/courses/${courseData.course_image_cover}`);
+            } else {
+                setExistingCoverImageUrl('');
             }
-            if (courseData.profileImage) {
-                setProfilePreview(courseData.profileImage);
+            if (courseData.course_image_profile) {
+                setExistingProfileImageUrl(`${API_BASE_URL}/uploads/courses/${courseData.course_image_profile}`);
+            } else {
+                setExistingProfileImageUrl('');
             }
+
+            setProfilePreviewUrl('');
+            setCoverPreviewUrl('');
+            setProfileImageFile(null);
+            setCoverImageFile(null);
 
             setIsEditing(false);
         } else if (mode === 'add') {
-            // Reset form untuk mode add
-            setFormData({
-                name: '',
-                description: '',
-                price: '',
-                status: 'pending',
-                slug: ''
-            });
-            setCoverPreview('');
-            setProfilePreview('');
-            setCoverImage(null);
-            setProfileImage(null);
+            setFormData(initialFormData);
+
+            setCoverPreviewUrl('');
+            setProfilePreviewUrl('');
+            setCoverImageFile(null);
+            setProfileImageFile(null);
+            setExistingCoverImageUrl('');
+            setExistingProfileImageUrl('');
+
             setIsEditing(true);
+        } else {
+            setFormData(initialFormData);
+            setCoverPreviewUrl('');
+            setProfilePreviewUrl('');
+            setCoverImageFile(null);
+            setProfileImageFile(null);
+            setExistingCoverImageUrl('');
+            setExistingProfileImageUrl('');
+            setIsEditing(false); 
         }
     }, [courseData, mode]);
 
@@ -85,15 +101,14 @@ const CourseForm: React.FC<CourseFormProps> = ({
             ...prev,
             [name]: value
         }));
-
-        if (name === 'name') {
+        if (name === 'course_name') {
             const slug = value.toLowerCase()
                 .replace(/[^a-z0-9 ]/g, '')
                 .replace(/\s+/g, '-')
                 .trim();
             setFormData(prev => ({
                 ...prev,
-                slug: slug
+                course_slug: slug
             }));
         }
     };
@@ -104,63 +119,110 @@ const CourseForm: React.FC<CourseFormProps> = ({
             const reader = new FileReader();
             reader.onloadend = () => {
                 if (type === 'profile') {
-                    setProfileImage(file);
-                    setProfilePreview(reader.result as string);
+                    setProfileImageFile(file);
+                    setProfilePreviewUrl(reader.result as string);
+                    setExistingProfileImageUrl('');
+                    setFormData(prev => ({ ...prev, course_image_profile: file }));
                 } else {
-                    setCoverImage(file);
-                    setCoverPreview(reader.result as string);
+                    setCoverImageFile(file);
+                    setCoverPreviewUrl(reader.result as string);
+                    setExistingCoverImageUrl(''); 
+                    setFormData(prev => ({ ...prev, course_image_cover: file }));
                 }
             };
             reader.readAsDataURL(file);
-        }
-    };
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-
-        if (mode === 'add') {
-            // Mode add - langsung save
-            const dataToSave = {
-                ...formData,
-                coverImage: coverPreview,
-                profileImage: profilePreview
-            };
-            onSave(dataToSave);
-        } else if (mode === 'edit' || mode === 'view') {
-            if (isEditing) {
-                // Save changes
-                const dataToSave = {
-                    ...formData,
-                    coverImage: coverPreview,
-                    profileImage: profilePreview
-                };
-                onSave(dataToSave);
-                setIsEditing(false);
+        } else {
+            if (type === 'profile') {
+                setProfileImageFile(null);
+                setProfilePreviewUrl('');
+                setFormData(prev => ({ ...prev, course_image_profile: null }));
             } else {
-                // Enable editing
-                setIsEditing(true);
+                setCoverImageFile(null);
+                setCoverPreviewUrl('');
+                setFormData(prev => ({ ...prev, course_image_cover: null }));
             }
         }
     };
 
-    const canEdit = isActive && (mode === 'add' || isEditing);
+    const handleSaveSubmit = (e: React.FormEvent) => {
+        e.preventDefault(); 
+        const dataToSave: CourseFormData = {
+            ...formData,
+            course_image_profile: profileImageFile,
+            course_image_cover: coverImageFile,
+        };
+        onSave(dataToSave);
+    };
 
-    const status = [
+    const handleEditButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        setIsEditing(true);
+    };
+
+    const handleCancelClick = () => {
+        if (onCancel) {
+            onCancel();
+        }
+        if (mode === 'add') {
+            setFormData(initialFormData);
+            setProfileImageFile(null);
+            setProfilePreviewUrl('');
+            setCoverImageFile(null);
+            setCoverPreviewUrl('');
+            setExistingProfileImageUrl('');
+            setExistingCoverImageUrl('');
+        } else if (mode === 'edit' && courseData) {
+            setFormData({
+                course_id: courseData.course_id,
+                course_name: courseData.course_name || '',
+                course_description: courseData.course_description || '',
+                course_price: courseData.course_price || '',
+                status: courseData.status,
+                course_slug: courseData.course_slug || '',
+                course_image_profile: null,
+                course_image_cover: null,
+            });
+            if (courseData.course_image_cover) {
+                setExistingCoverImageUrl(`${API_BASE_URL}/uploads/courses/${courseData.course_image_cover}`);
+            } else {
+                setExistingCoverImageUrl('');
+            }
+            if (courseData.course_image_profile) {
+                setExistingProfileImageUrl(`${API_BASE_URL}/uploads/courses/${courseData.course_image_profile}`);
+            } else {
+                setExistingProfileImageUrl('');
+            }
+            setProfilePreviewUrl('');
+            setCoverPreviewUrl('');
+            setProfileImageFile(null);
+            setCoverImageFile(null);
+            setIsEditing(false); 
+        }
+    };
+
+
+    const canEdit = isActive && (mode === 'add' || isEditing);
+    const statusOptions = [
         { value: "pending", label: "Pending" },
         { value: "published", label: "Published" },
     ];
-
     const handleSelectChange = (value: string) => {
-        console.log("Selected value:", value);
+        setFormData(prev => ({
+            ...prev,
+            status: value as 'published' | 'pending'
+        }));
     };
 
+    const displayCoverImage = coverPreviewUrl || existingCoverImageUrl;
+    const displayProfileImage = profilePreviewUrl || existingProfileImageUrl;
+
     return (
-        <form onSubmit={handleSubmit} className="space-y-6 w-full h-full mx-auto">
+        <form onSubmit={handleSaveSubmit} className="space-y-6 w-full h-full mx-auto">
             <div className="relative">
                 <div className="h-80 rounded-t-lg overflow-hidden relative">
-                    {coverPreview ? (
+                    {displayCoverImage ? (
                         <img
-                            src={coverPreview}
+                            src={displayCoverImage}
                             alt="Course cover"
                             className="w-full h-full object-cover"
                         />
@@ -190,19 +252,18 @@ const CourseForm: React.FC<CourseFormProps> = ({
                         </div>
                     )}
                 </div>
-
                 <div className="pt-6 px-0">
                     <div className="flex gap-6">
                         <div className="flex-shrink-0 relative">
-                            <div className="w-48 h-48 bg-gray-200 border border-gray-300 dark:border-gray-700 dark:bg-gray-900 rounded-lg flex items-center justify-center overflow-hidden">
-                                {profilePreview ? (
+                            <div className="w-48 h-48 bg-gray-200 dark:border-gray-700 border border-gray-300 dark:bg-gray-900 rounded-lg flex items-center justify-center overflow-hidden">
+                                {displayProfileImage ? (
                                     <img
-                                        src={profilePreview}
+                                        src={displayProfileImage}
                                         alt="Course profile"
                                         className="w-full h-full object-cover"
                                     />
                                 ) : (
-                                    <div className="text-center bg-transparent  text-gray-900 dark:text-gray-300">
+                                    <div className="text-center bg-transparent text-gray-900 dark:text-gray-300">
                                         <svg className="w-8 h-8 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2z" />
                                         </svg>
@@ -226,7 +287,6 @@ const CourseForm: React.FC<CourseFormProps> = ({
                                 </div>
                             )}
                         </div>
-
                         <div className="flex-1">
                             <label className="block text-lg font-medium text-gray-800 dark:text-gray-300 mb-5">
                                 Nama Course:
@@ -234,8 +294,8 @@ const CourseForm: React.FC<CourseFormProps> = ({
                             <div className="h-32 bg-[#F9FAFB] dark:bg-gray-900 dark:border-gray-700 border border-gray-300 rounded-lg py-3 px-5">
                                 <textarea
                                     rows={4}
-                                    name="name"
-                                    value={formData.name}
+                                    name="course_name"
+                                    value={formData.course_name}
                                     onChange={handleInputChange}
                                     disabled={!canEdit}
                                     className="w-full h-full bg-transparent border-none outline-none text-gray-800 dark:text-gray-300 placeholder-gray-600 disabled:cursor-not-allowed disabled:opacity-70"
@@ -246,7 +306,6 @@ const CourseForm: React.FC<CourseFormProps> = ({
                     </div>
                 </div>
             </div>
-
             <div className="space-y-3">
                 <div>
                     <label className="block text-lg font-medium text-gray-800 dark:text-gray-300 mb-3">
@@ -254,8 +313,8 @@ const CourseForm: React.FC<CourseFormProps> = ({
                     </label>
                     <div className="h-32 bg-[#F9FAFB] dark:bg-gray-900 dark:border-gray-700 border border-gray-300 rounded-lg py-3 px-5">
                         <textarea
-                            name="description"
-                            value={formData.description}
+                            name="course_description"
+                            value={formData.course_description}
                             onChange={handleInputChange}
                             disabled={!canEdit}
                             className="w-full h-full bg-transparent border-none outline-none resize-none text-gray-800 dark:text-gray-300 placeholder-gray-600 disabled:cursor-not-allowed disabled:opacity-70"
@@ -263,7 +322,6 @@ const CourseForm: React.FC<CourseFormProps> = ({
                         />
                     </div>
                 </div>
-
                 <div className="grid grid-cols-2 gap-6">
                     <div>
                         <label className="block text-lg font-medium text-gray-800 dark:text-gray-300 mb-3">
@@ -272,8 +330,8 @@ const CourseForm: React.FC<CourseFormProps> = ({
                         <div className="h-12 bg-[#F9FAFB] dark:bg-gray-900 dark:border-gray-700 border border-gray-300 rounded-lg px-5">
                             <input
                                 type="number"
-                                name="price"
-                                value={formData.price}
+                                name="course_price"
+                                value={formData.course_price}
                                 onChange={handleInputChange}
                                 disabled={!canEdit}
                                 className="w-full h-full bg-transparent border-none outline-none text-gray-800 dark:text-gray-300 placeholder-gray-600 disabled:cursor-not-allowed disabled:opacity-70"
@@ -281,31 +339,31 @@ const CourseForm: React.FC<CourseFormProps> = ({
                             />
                         </div>
                     </div>
-
                     <div>
                         <label className="block text-lg font-medium text-gray-800 dark:text-gray-300 mb-3">
                             Status Course:
                         </label>
                         <div className="h-12 rounded-lg">
                             <Select
-                                options={status}
+                                options={statusOptions}
                                 placeholder="Status Course"
+                                defaultValue={formData.status}
                                 onChange={handleSelectChange}
+                                disabled={!canEdit}
                                 className="dark:bg-dark-900 h-full"
                             />
                         </div>
                     </div>
                 </div>
-
                 <div>
                     <label className="block text-lg font-medium text-gray-800 dark:text-gray-300 mb-3">
                         Slug Course:
                     </label>
-                    <div className="h-15 bg-[#F9FAFB] dark:bg-gray-900 dark:border-gray-700 borderborder-gray-300 rounded-lg px-5">
+                    <div className="h-12 bg-[#F9FAFB] dark:bg-gray-900 dark:border-gray-700 border border-gray-300 rounded-lg px-5">
                         <input
                             type="text"
-                            name="slug"
-                            value={formData.slug}
+                            name="course_slug"
+                            value={formData.course_slug}
                             onChange={handleInputChange}
                             disabled={!canEdit}
                             className="w-full h-full bg-transparent border-none outline-none text-gray-800 dark:text-gray-300 placeholder-gray-600 disabled:cursor-not-allowed disabled:opacity-70"
@@ -313,12 +371,11 @@ const CourseForm: React.FC<CourseFormProps> = ({
                         />
                     </div>
                 </div>
-
                 <div className="flex justify-end gap-3 pt-4">
-                    {mode === 'add' && onCancel && (
+                    {(mode === 'add' || (mode === 'edit' && isEditing)) && onCancel && (
                         <button
-                            type="button"
-                            onClick={onCancel}
+                            type="button" 
+                            onClick={handleCancelClick}
                             className="px-6 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             Batal
@@ -326,11 +383,10 @@ const CourseForm: React.FC<CourseFormProps> = ({
                     )}
 
                     <button
-                        type="submit"
+                        type={canEdit ? "submit" : "button"}
+                        onClick={canEdit ? undefined : handleEditButtonClick}
                         disabled={!isActive}
-                        className={`px-6 py-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${mode === 'add'
-                            ? 'bg-primary hover:bg-secondary text-white'
-                            : isEditing
+                        className={`px-6 py-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${canEdit
                                 ? 'bg-primary hover:bg-secondary text-white'
                                 : 'bg-primary hover:bg-secondary text-white'
                             }`}

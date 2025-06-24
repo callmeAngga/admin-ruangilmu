@@ -4,69 +4,188 @@ import CourseList from "../components/ui/CourseList";
 import PaginationCard from "../components/card/PaginationCard";
 import HeaderFormCard from "../components/card/HeaderFormCard";
 import CourseForm from "../components/form/CourseForm";
-
-interface CourseData {
-    id?: string;
-    name: string;
-    coverImage?: string;
-    profileImage?: string;
-    description: string;
-    price: string;
-    status: 'published' | 'pending';
-    slug: string;
-}
+import LoadingModal from '../components/LoadingModal';
+import useMutation from "../hooks/useMutation";
+import type { CourseData, CourseFormData } from "../types/course";
 
 export default function CoursePage() {
     const [selectedCourse, setSelectedCourse] = useState<CourseData | null>(null);
     const [formMode, setFormMode] = useState<'add' | 'edit' | 'view'>('view');
-    const [isFormActive, setIsFormActive] = useState(true);
+    const [isFormActive, setIsFormActive] = useState(false); 
 
-    // Handler ketika CourseCard diklik
+    const [currentPage, setCurrentPage] = useState(1);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [statusFilter, setStatusFilter] = useState('');
+
+    const { loading: createLoading, error: createError, execute: createCourseApi, reset: resetCreateState } = useMutation<CourseData, CourseFormData | FormData>();
+    const { loading: updateLoading, error: updateError, execute: updateCourseApi, reset: resetUpdateState } = useMutation<CourseData, CourseFormData | FormData>();
+
+    const isLoading = createLoading || updateLoading;
+    const error = createError || updateError;
+
+    const clearFormAndResetState = () => {
+        setSelectedCourse(null);
+        setFormMode('view');
+        setIsFormActive(false);
+        resetCreateState();
+        resetUpdateState();
+    };
+
     const handleCourseSelect = (courseData: CourseData) => {
         setSelectedCourse(courseData);
         setFormMode('edit');
         setIsFormActive(true);
+        resetCreateState();
+        resetUpdateState();
     };
 
-    // Handler ketika tombol "Tambah" di HeaderFormCard diklik
     const handleAddNewCourse = () => {
         setSelectedCourse(null);
         setFormMode('add');
         setIsFormActive(true);
+        resetCreateState();
+        resetUpdateState();
     };
 
-    // Handler ketika form disimpan
-    const handleFormSave = (data: CourseData) => {
-        if (formMode === 'add') {
-            console.log('Adding new course:', data);
-            // TODO: Implement add course logic
-        } else {
-            console.log('Updating course:', data);
-            // TODO: Implement update course logic
+    const handleFormSave = async (data: CourseFormData) => {
+        let success = false;
+        try {
+            if (formMode === 'add') {
+                const formData = new FormData();
+
+                formData.append('course_name', data.course_name);
+                formData.append('course_description', data.course_description);
+                formData.append('course_price', String(data.course_price));
+                formData.append('course_slug', data.course_slug);
+                formData.append('status', data.status);
+
+                if (data.course_image_profile instanceof File) {
+                    if (!data.course_image_profile.type.startsWith('image/')) {
+                        throw new Error('Profile image must be an image file');
+                    }
+                    if (data.course_image_profile.size > 5 * 1024 * 1024) { 
+                        throw new Error('Profile image size must be less than 5MB');
+                    }
+                    formData.append('course_image_profile', data.course_image_profile);
+                }
+
+                if (data.course_image_cover instanceof File) {
+                    // Validasi file type dan size
+                    if (!data.course_image_cover.type.startsWith('image/')) {
+                        throw new Error('Cover image must be an image file');
+                    }
+                    if (data.course_image_cover.size > 5 * 1024 * 1024) {
+                        throw new Error('Cover image size must be less than 5MB');
+                    }
+                    formData.append('course_image_cover', data.course_image_cover);
+                }
+
+                const result = await createCourseApi('POST', '/courses', formData);
+                if (result) {
+                    console.log('Course added successfully:', result);
+                    success = true;
+                    clearFormAndResetState(); 
+                    window.location.reload(); 
+                }
+
+            } else if (formMode === 'edit' && selectedCourse) {
+                const formData = new FormData();
+
+                if (data.course_name !== undefined && data.course_name !== selectedCourse.course_name) {
+                    formData.append('course_name', data.course_name);
+                }
+                if (data.course_description !== undefined && data.course_description !== selectedCourse.course_description) {
+                    formData.append('course_description', data.course_description);
+                }
+                if (data.course_price !== undefined && data.course_price !== selectedCourse.course_price) {
+                    formData.append('course_price', String(data.course_price));
+                }
+                if (data.course_slug !== undefined && data.course_slug !== selectedCourse.course_slug) {
+                    formData.append('course_slug', data.course_slug);
+                }
+                if (data.status !== undefined && data.status !== selectedCourse.status) {
+                    formData.append('status', data.status);
+                }
+
+                if (data.course_image_profile instanceof File) {
+                    if (!data.course_image_profile.type.startsWith('image/')) {
+                        throw new Error('Profile image must be an image file');
+                    }
+                    if (data.course_image_profile.size > 5 * 1024 * 1024) {
+                        throw new Error('Profile image size must be less than 5MB');
+                    }
+                    formData.append('course_image_profile', data.course_image_profile);
+                }
+
+                if (data.course_image_cover instanceof File) {
+                    if (!data.course_image_cover.type.startsWith('image/')) {
+                        throw new Error('Cover image must be an image file');
+                    }
+                    if (data.course_image_cover.size > 5 * 1024 * 1024) {
+                        throw new Error('Cover image size must be less than 5MB');
+                    }
+                    formData.append('course_image_cover', data.course_image_cover);
+                }
+
+                const result = await updateCourseApi('PUT', `/courses/${selectedCourse.course_id}`, formData);
+                if (result) {
+                    console.log('Course updated successfully:', result);
+                    success = true;
+                    clearFormAndResetState(); 
+                    window.location.reload(); 
+                }
+            }
+
+            if (success && !error) {
+                clearFormAndResetState();
+            }
+
+        } catch (err) {
+            console.error('Form save error:', err);
         }
-
-        // Reset form setelah save
-        setSelectedCourse(null);
-        setFormMode('view');
-        setIsFormActive(false);
     };
 
-    // Handler ketika form dibatalkan (hanya untuk mode add)
     const handleFormCancel = () => {
-        setSelectedCourse(null);
-        setFormMode('view');
-        setIsFormActive(false);
+        clearFormAndResetState();
+    };
+
+    const handleSearch = (query: string) => {
+        setSearchQuery(query);
+        setCurrentPage(1);
+    };
+
+    const handleStatusFilter = (status: string) => {
+        setStatusFilter(status);
+        setCurrentPage(1);
+    };
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
     };
 
     return (
         <main className="p-4 min-h-screen bg-[#F9FAFB] dark:bg-gray-900">
             <div className="flex flex-col lg:flex-row gap-6">
                 <div className="flex-1 flex flex-col gap-4">
-                    <CourseMenu />
+                    <CourseMenu
+                        onSearch={handleSearch}
+                        onStatusFilter={handleStatusFilter}
+                    />
 
-                    <CourseList onCourseSelect={handleCourseSelect} totalColumn={2} />
+                    <CourseList
+                        onCourseSelect={handleCourseSelect}
+                        totalColumn={2}
+                        currentPage={currentPage}
+                        searchQuery={searchQuery}
+                        statusFilter={statusFilter}
+                    />
 
-                    <PaginationCard />
+                    <PaginationCard
+                        currentPage={currentPage}
+                        onPageChange={handlePageChange}
+                        searchQuery={searchQuery}
+                        statusFilter={statusFilter}
+                    />
                 </div>
 
                 <div className="flex-1 flex flex-col gap-4">
@@ -76,7 +195,7 @@ export default function CoursePage() {
                             formMode === 'add'
                                 ? "Buat course baru untuk platform pembelajaran"
                                 : formMode === 'edit'
-                                    ? `Edit course: ${selectedCourse?.name || ''}`
+                                    ? `Edit course: ${selectedCourse?.course_name || ''}`
                                     : "Pilih course dari daftar atau tambah course baru"
                         }
                         onAddClick={handleAddNewCourse}
@@ -93,8 +212,14 @@ export default function CoursePage() {
                             />
                         </div>
                     </div>
+                    {error && (
+                        <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded" role="alert">
+                            {error}
+                        </div>
+                    )}
                 </div>
             </div>
+            <LoadingModal isLoading={isLoading} message={createLoading ? "Menambahkan Course..." : "Memperbarui Course..."} />
         </main>
     );
 }

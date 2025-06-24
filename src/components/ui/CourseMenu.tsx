@@ -1,29 +1,52 @@
+import { useState } from 'react';
 import Select from "../form/Select";
 
 const status = [
+    { value: "", label: "All Status" },
     { value: "pending", label: "Pending" },
     { value: "published", label: "Published" },
 ];
 
-const kelas = [
-    { value: "4", label: "Kelas 4" },
-    { value: "5", label: "Kelas 5" },
-    { value: "6", label: "Kelas 6" },
-];
+interface CourseMenuProps {
+    onSearch: (query: string) => void;
+    onStatusFilter: (status: string) => void;
+}
 
-const handleSelectChange = (value: string) => {
-    console.log("Selected value:", value);
-};
+const CourseMenu = ({ onSearch, onStatusFilter }: CourseMenuProps) => {
+    const [searchValue, setSearchValue] = useState('');
 
-const CourseMenu = () => {
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setSearchValue(value);
+        
+        const timeoutId = setTimeout(() => {
+            onSearch(value);
+        }, 500);
+
+        return () => clearTimeout(timeoutId);
+    };
+
+    const handleSearchSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        onSearch(searchValue);
+    };
+
+    const handleStatusChange = (value: string) => {
+        console.log("Selected status:", value);
+        onStatusFilter(value);
+    };
+
     return (
         <div className="bg-white border dark:border-gray-800 border-gray-300 dark:bg-gray-800 rounded-lg p-4">
             <h1 className="text-[18px] font-medium mb-4 text-gray-800 dark:text-gray-300 pl-1">Menu Course:</h1>
 
-            <div className=" rounded-lg mb-4 w-full">
-                <form>
+            <div className="rounded-lg mb-4 w-full">
+                <form onSubmit={handleSearchSubmit}>
                     <div className="relative">
-                        <button className="absolute -translate-y-1/2 left-4 top-1/2">
+                        <button 
+                            type="submit"
+                            className="absolute -translate-y-1/2 left-4 top-1/2 hover:opacity-70 transition-opacity"
+                        >
                             <svg
                                 className="fill-gray-500 dark:fill-gray-400"
                                 width="20"
@@ -43,8 +66,24 @@ const CourseMenu = () => {
                         <input
                             type="text"
                             placeholder="Masukan nama course"
-                            className="h-11 w-full rounded-lg border border-gray-300 bg-transparent py-2.5 pl-12 pr-5 text-sm text-black shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-1 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900  dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
+                            value={searchValue}
+                            onChange={handleSearchChange}
+                            className="h-11 w-full rounded-lg border border-gray-300 bg-transparent py-2.5 pl-12 pr-5 text-sm text-black shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-1 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                         />
+                        {searchValue && (
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setSearchValue('');
+                                    onSearch('');
+                                }}
+                                className="absolute -translate-y-1/2 right-4 top-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        )}
                     </div>
                 </form>
             </div>
@@ -53,22 +92,14 @@ const CourseMenu = () => {
                 <div className="rounded-lg flex-1">
                     <Select
                         options={status}
-                        placeholder="Status Course"
-                        onChange={handleSelectChange}
-                        className="dark:bg-dark-900"
-                    />
-                </div>
-                <div className="rounded-lg flex-1 ">
-                    <Select
-                        options={kelas}
-                        placeholder="Status Course"
-                        onChange={handleSelectChange}
+                        placeholder="Filter by Status"
+                        onChange={handleStatusChange}
                         className="dark:bg-dark-900"
                     />
                 </div>
             </div>
         </div>
     );
-}
+};
 
 export default CourseMenu;

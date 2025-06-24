@@ -1,32 +1,37 @@
 import { useState, useEffect } from 'react';
 
 interface UseApiDataResult<T> {
-  data: T | null;
-  loading: boolean;
-  error: string | null;
+    data: T | null;
+    loading: boolean;
+    error: string | null;
 }
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
-const token = import.meta.env.VITE_TOKEN;
+// const token = import.meta.env.VITE_TOKEN;
+const token = localStorage.getItem('accessTokenAdmin');
 
 const useApiData = <T>(endpoint: string): UseApiDataResult<T> => {
-  const [data, setData] = useState<T | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
+    const [data, setData] = useState<T | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
+        if (!endpoint) {
+            setLoading(false);
+            setData(null);
+            setError(null);
+            return;
+        }
+
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`${API_URL}${endpoint}`, {
+                const response = await fetch(`${API_URL}/admin${endpoint}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     }
                 });
-                console.log(`Fetching data from: ${API_URL}${endpoint}`);
-                console.log('Response status:', response.status);
 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);

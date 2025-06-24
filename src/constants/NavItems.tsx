@@ -17,7 +17,7 @@ export const navItems: NavItem[] = [
     {
         name: "Dashboard",
         icon: <DashboardIcon fill="currentColor" width={20} height={20} />,
-        path: "/"
+        path: "/dashboard"
     },
     {
         name: "Courses",

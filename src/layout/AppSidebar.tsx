@@ -13,6 +13,11 @@ const AppSidebar: React.FC = () => {
         [location.pathname]
     );
 
+    const handleLogout = () => {
+        localStorage.removeItem('accessTokenAdmin');
+        window.location.href = import.meta.env.VITE_FRONTEND_URL;
+    };
+
     const renderMenuItems = (items: NavItem[]) => (
         <ul className="flex flex-col gap-4">
             {items.map((nav) => (
@@ -52,6 +57,7 @@ const AppSidebar: React.FC = () => {
             <ul className="flex flex-col gap-4">
                 <li>
                     <button
+                        onClick={handleLogout}
                         onMouseEnter={() => setIsHovered(true)}
                         onMouseLeave={() => setIsHovered(false)}
                         className="menu-item border-2 border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-200"
